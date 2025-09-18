@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -47,6 +48,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @ToString
+@Builder(toBuilder = true)
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "endpoint_hits")
@@ -63,7 +65,7 @@ public class EndpointHit {
     @Column(name = "uri", nullable = false)
     private String uri;
 
-    @Column(name = "ip", nullable = false)
+    @Column(name = "ip", nullable = false, length = 30)
     private String ip;
 
     @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
