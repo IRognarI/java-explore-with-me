@@ -29,6 +29,7 @@
         <logback-classic.version>1.5.18</logback-classic.version>
         <postgresql.version>42.7.7</postgresql.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot-starter.validation.version>4.0.0-M2</spring-boot-starter.validation.version>
     </properties>
 
     <dependencyManagement>
@@ -52,6 +53,11 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${spring-boot-starter.validation.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
