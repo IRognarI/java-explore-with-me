@@ -1,4 +1,4 @@
-package ru.practicum.exploreWithMe.controller;
+package ru.practicum.stats.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.exploreWithMe.dto.EndpointHitDto;
-import ru.practicum.exploreWithMe.dto.ViewStats;
-import ru.practicum.exploreWithMe.interfaces.StatsService;
+import ru.practicum.stats.dto.EndpointHitDto;
+import ru.practicum.stats.dto.ViewStats;
+import ru.practicum.stats.interfaces.StatsService;
 
 import java.time.LocalDateTime;
 import java.util.List;

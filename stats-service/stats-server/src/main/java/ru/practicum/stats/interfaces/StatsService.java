@@ -1,7 +1,7 @@
-package ru.practicum.exploreWithMe.interfaces;
+package ru.practicum.stats.interfaces;
 
-import ru.practicum.exploreWithMe.dto.EndpointHitDto;
-import ru.practicum.exploreWithMe.dto.ViewStats;
+import ru.practicum.stats.dto.EndpointHitDto;
+import ru.practicum.stats.dto.ViewStats;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,15 +1,15 @@
-package ru.practicum.exploreWithMe.service;
+package ru.practicum.stats.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.exploreWithMe.dto.EndpointHitDto;
-import ru.practicum.exploreWithMe.dto.ViewStats;
-import ru.practicum.exploreWithMe.formatter.TimeStampFormatter;
-import ru.practicum.exploreWithMe.interfaces.StatsService;
-import ru.practicum.exploreWithMe.model.EndpointHit;
-import ru.practicum.exploreWithMe.repository.JpaEndpointHit;
+import ru.practicum.stats.dto.EndpointHitDto;
+import ru.practicum.stats.dto.ViewStats;
+import ru.practicum.stats.formatter.TimeStampFormatter;
+import ru.practicum.stats.interfaces.StatsService;
+import ru.practicum.stats.model.EndpointHit;
+import ru.practicum.stats.repository.JpaEndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.practicum.exploreWithMe.dto;
+package ru.practicum.stats.dto;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

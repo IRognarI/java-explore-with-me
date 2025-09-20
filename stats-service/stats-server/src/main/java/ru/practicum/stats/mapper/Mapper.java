@@ -1,8 +1,8 @@
-package ru.practicum.exploreWithMe.mapper;
+package ru.practicum.stats.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.exploreWithMe.dto.ViewStats;
-import ru.practicum.exploreWithMe.model.EndpointHit;
+import ru.practicum.stats.dto.ViewStats;
+import ru.practicum.stats.model.EndpointHit;
 
 /**
  * Утилитарный класс для преобразования между объектами {@link EndpointHit} и {@link ViewStats}.

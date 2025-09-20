@@ -1,4 +1,4 @@
-package ru.practicum.exploreWithMe.formatter;
+package ru.practicum.stats.formatter;
 
 import lombok.experimental.UtilityClass;
 
