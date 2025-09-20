@@ -2,14 +2,12 @@ package ru.practicum.stats;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Тестовый класс для проверки загрузки Spring контекста приложения.
  * Проверяет, что приложение может успешно стартовать и загружать все необходимые компоненты.
  */
 @SpringBootTest
-@ActiveProfiles("test")
 class ExploreWithMeServerTest {
 
     /**
