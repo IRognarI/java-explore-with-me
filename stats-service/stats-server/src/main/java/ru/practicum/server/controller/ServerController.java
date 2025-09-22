@@ -1,6 +1,7 @@
 package ru.practicum.server.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ServerController {
     private final Server server;
 
     @PostMapping("/hit")
-    public ResponseEntity<String> addHit(@RequestBody RequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<String> addHit(@Valid @RequestBody RequestDto requestDto, HttpServletRequest request) {
 
         return server.addHit(requestDto, request) ?
                 ResponseEntity.status(HttpStatus.CREATED).body("Информация сохранена") :
