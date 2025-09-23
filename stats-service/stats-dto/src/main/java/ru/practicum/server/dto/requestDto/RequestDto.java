@@ -23,7 +23,7 @@ public class RequestDto {
     @NotNull(message = "URI не может быть пустым")
     private String uri;
 
-    @NotNull(message = "IP не может быть пустым")
+    //@NotNull(message = "IP не может быть пустым")
     private String ip;
 
     @NotNull(message = "Дата не может быть пустой")

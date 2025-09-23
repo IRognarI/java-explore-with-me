@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @Builder(toBuilder = true)
 @ToString
-@EqualsAndHashCode(of = {"app", "uri"})
+@EqualsAndHashCode
 public class ViewStats {
     private String app;
     private String uri;

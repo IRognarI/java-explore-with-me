@@ -10,12 +10,15 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.server.dto.requestDto.RequestDto;
+import ru.practicum.server.dto.requestDto.ViewStats;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
 import ru.practicum.server.exception.ValidationException;
 import ru.practicum.server.model.EndpointHit;
 import ru.practicum.server.repository.JpaEndpointHit;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class ServerImplTest {
@@ -32,6 +35,7 @@ public class ServerImplTest {
     private RequestDto requestDto;
     private RequestDto requestDto_2;
     private EndpointHit endpointHit;
+    private List<ViewStats> viewStatsList = new ArrayList<>();
 
     @BeforeEach
     public void setup() {
@@ -52,6 +56,24 @@ public class ServerImplTest {
                 .ip(requestDto.getIp())
                 .timestamp(requestDto.getTimestamp())
                 .build();
+
+        viewStatsList.add(ViewStats.builder()
+                .app("ewm")
+                .uri("/stats/1")
+                .hits(2L)
+                .build());
+
+        viewStatsList.add(ViewStats.builder()
+                .app("ewm_2")
+                .uri("/stats/2")
+                .hits(4L)
+                .build());
+
+        viewStatsList.add(ViewStats.builder()
+                .app("ewm_3")
+                .uri("/stats/3")
+                .hits(9L)
+                .build());
     }
 
     @Test
@@ -82,5 +104,26 @@ public class ServerImplTest {
         Mockito.when(http_2.getRequestURI()).thenReturn("/ewent/1");
 
         Assertions.assertThrows(ErrorGettingAnIpAddress.class, () -> server.addHit(requestDto, http_2));
+    }
+
+    @Test
+    public void getStats_List_Is_Not_Empty() {
+        String[] uris = {"stats/1", "stats/2", "stats/3"};
+
+        Mockito
+                .when(repository.getStatsWithHist(
+                        Mockito.any(LocalDateTime.class),
+                        Mockito.any(LocalDateTime.class),
+                        Mockito.anyList(),
+                        Mockito.anyBoolean()))
+                .thenReturn(viewStatsList);
+
+        List<ViewStats> viewStats = server.getStats(
+                LocalDateTime.now().minusMonths(1),
+                LocalDateTime.now(),
+                uris,
+                true);
+
+        Assertions.assertEquals(3, viewStats.size());
     }
 }
