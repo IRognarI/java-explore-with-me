@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.client.configuration.ClientConfig;
+import ru.practicum.client.exception.LinksNotFoundException;
 import ru.practicum.client.exception.ValidationException;
 import ru.practicum.server.dto.requestDto.RequestDto;
 
@@ -93,5 +94,35 @@ class ClientServImplTest {
         assertThrows(ValidationException.class, () -> {
             clientServ.requestForEndPointWithPath_Hit("/test-path", null);
         });
+    }
+
+    @Test
+    void requestForEndPointWithPath_Stats_StartAfterEnd_ThrowsValidationException() {
+        String path = "/stats";
+        LocalDateTime start = LocalDateTime.of(2023, 12, 31, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 1, 1, 0, 0);
+        String[] uris = {"/events/1"};
+        Boolean unique = true;
+
+        ValidationException exception = assertThrows(ValidationException.class, () ->
+                clientServ.requestForEndPointWithPath_Stats(path, start, end, uris, unique)
+        );
+
+        assertEquals("Начало диапазона поиска должно быть раньше конца", exception.getMessage());
+    }
+
+    @Test
+    void requestForEndPointWithPath_Stats_EmptyUris_ThrowsLinksNotFoundException() {
+        String path = "/stats";
+        LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 31, 0, 0);
+        String[] uris = {};
+        Boolean unique = true;
+
+        LinksNotFoundException exception = assertThrows(LinksNotFoundException.class, () ->
+                clientServ.requestForEndPointWithPath_Stats(path, start, end, uris, unique)
+        );
+
+        assertEquals("Укажите ссылки для формирования статистики", exception.getMessage());
     }
 }

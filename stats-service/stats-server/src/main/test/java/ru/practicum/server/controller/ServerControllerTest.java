@@ -15,12 +15,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.server.dto.requestDto.RequestDto;
+import ru.practicum.server.dto.requestDto.ViewStats;
+import ru.practicum.server.formatter.TimeStampFormatter;
 import ru.practicum.server.interfaces.Server;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,13 +40,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ServerControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @MockBean
-    Server server;
+    private Server server;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     private RequestDto requestDto;
 
@@ -62,8 +73,8 @@ class ServerControllerTest {
     }
 
     @Test
-    public void addHit_Correct() throws Exception {
-        Mockito.when(server.addHit(Mockito.eq(requestDto), Mockito.any(HttpServletRequest.class))).thenReturn(true);
+    public void addHit_Correct() {
+        when(server.addHit(Mockito.eq(requestDto), any(HttpServletRequest.class))).thenReturn(true);
 
         try {
 
@@ -74,13 +85,12 @@ class ServerControllerTest {
                     .andExpect(content().string("Информация сохранена"));
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            throw e;
         }
     }
 
     @Test
-    public void addHit_UnCorrect() throws Exception {
-        Mockito.when(server.addHit(Mockito.eq(requestDto), Mockito.any(HttpServletRequest.class))).thenReturn(false);
+    public void addHit_UnCorrect() {
+        when(server.addHit(Mockito.eq(requestDto), any(HttpServletRequest.class))).thenReturn(false);
 
         try {
 
@@ -91,7 +101,6 @@ class ServerControllerTest {
                     .andExpect(content().string("Возникла ошибка при сохранении статистики"));
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
-            throw e;
         }
     }
 }

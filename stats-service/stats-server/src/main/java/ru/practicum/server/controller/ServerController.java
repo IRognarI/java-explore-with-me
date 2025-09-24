@@ -55,7 +55,7 @@ public class ServerController {
         List<ViewStats> statsList = server.getStats(start, end, uris, unique);
 
         return !statsList.isEmpty() ?
-                ResponseEntity.status(HttpStatus.OK).body(statsList) :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(statsList);
+                ResponseEntity.ok(statsList) :
+                ResponseEntity.status(HttpStatus.NO_CONTENT).body(statsList);
     }
 }
