@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import ru.practicum.client.interfaces.ClientService;
 import ru.practicum.server.dto.requestDto.RequestDto;
 import ru.practicum.server.dto.requestDto.ViewStats;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -78,13 +80,14 @@ public class ClientServImpl implements ClientService {
             builder.queryParam("uris", val);
         }
 
-        builder.queryParam("unique", unique);
+        builder.queryParam("unique", unique).encode(StandardCharsets.UTF_8);
 
-        String finishPath = builder.encode().toUriString();
+        String finishPath = builder.toUriString();
 
-        return restTemplate.getForEntity(
+        return restTemplate.exchange(
                 finishPath,
-                null,
+                HttpMethod.GET,
+                HttpEntity.EMPTY,
                 new ParameterizedTypeReference<List<ViewStats>>() {
                 }
         );
