@@ -16,7 +16,6 @@ import ru.practicum.client.interfaces.ClientService;
 import ru.practicum.server.dto.requestDto.RequestDto;
 import ru.practicum.server.dto.requestDto.ViewStats;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -70,15 +69,21 @@ public class ClientServImpl implements ClientService {
         headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        UriComponentsBuilder builder = UriComponentsBuilder.newInstance();
+        builder.path(clientConfig.pathForEndPoint(path))
+                .queryParam("start", start)
+                .queryParam("end", end);
+
+        for (String val : uris) {
+            builder.queryParam("uris", val);
+        }
+
+        builder.queryParam("unique", unique);
+
+        String finishPath = builder.encode().toUriString();
+
         return restTemplate.getForEntity(
-                UriComponentsBuilder.newInstance()
-                        .path(clientConfig.pathForEndPoint(path))
-                        .queryParam("start", start)
-                        .queryParam("end", end)
-                        .queryParam("uris", (Object[]) uris)
-                        .queryParam("unique", unique)
-                        .encode(StandardCharsets.UTF_8)
-                        .toUriString(),
+                finishPath,
                 null,
                 new ParameterizedTypeReference<List<ViewStats>>() {
                 }

@@ -15,25 +15,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.server.dto.requestDto.RequestDto;
 import ru.practicum.server.dto.requestDto.ViewStats;
-import ru.practicum.server.formatter.TimeStampFormatter;
 import ru.practicum.server.interfaces.Server;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ServerController.class)
@@ -74,7 +70,7 @@ class ServerControllerTest {
 
     @Test
     public void addHit_Correct() {
-        when(server.addHit(Mockito.eq(requestDto), any(HttpServletRequest.class))).thenReturn(true);
+        when(server.addHit(eq(requestDto), any(HttpServletRequest.class))).thenReturn(true);
 
         try {
 
@@ -90,7 +86,7 @@ class ServerControllerTest {
 
     @Test
     public void addHit_UnCorrect() {
-        when(server.addHit(Mockito.eq(requestDto), any(HttpServletRequest.class))).thenReturn(false);
+        when(server.addHit(eq(requestDto), any(HttpServletRequest.class))).thenReturn(false);
 
         try {
 
@@ -102,5 +98,90 @@ class ServerControllerTest {
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
+    }
+
+    @Test
+    void getStats_shouldReturnOk_whenStatsListIsNotEmpty() throws Exception {
+        LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        String[] uris = {"/events/1", "/events/2"};
+        Boolean unique = true;
+
+        ViewStats viewStats1 = ViewStats.builder()
+                .app("ewm")
+                .uri("/events/1")
+                .hits(10l)
+                .build();
+
+        ViewStats viewStats2 = ViewStats.builder()
+                .app("ewm_2")
+                .uri("/events/2")
+                .hits(5l)
+                .build();
+
+        List<ViewStats> statsList = List.of(viewStats1, viewStats2);
+
+        Mockito.when(server.getStats(any(), any(), any(), any())).thenReturn(statsList);
+
+        mvc.perform(get("/stats")
+                        .param("start", "2023-01-01 00:00:00")
+                        .param("end", "2023-12-31 23:59:59")
+                        .param("uris", uris)
+                        .param("unique", "true")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].uri").value("/events/1"))
+                .andExpect(jsonPath("$[0].hits").value(10))
+                .andExpect(jsonPath("$[1].uri").value("/events/2"))
+                .andExpect(jsonPath("$[1].hits").value(5));
+    }
+
+    @Test
+    void getStats_shouldReturnNoContent_whenStatsListIsEmpty() throws Exception {
+        LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        String[] uris = {"/events/1"};
+        Boolean unique = false;
+
+        List<ViewStats> emptyStatsList = List.of();
+
+        Mockito.when(server.getStats(any(), any(), any(), any())).thenReturn(emptyStatsList);
+
+        mvc.perform(get("/stats")
+                        .param("start", "2023-01-01 00:00:00")
+                        .param("end", "2023-12-31 23:59:59")
+                        .param("uris", uris)
+                        .param("unique", "false")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getStats_shouldUseDefaultUniqueValue_whenUniqueNotProvided() throws Exception {
+        LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
+        String[] uris = {"/events/1"};
+
+        ViewStats viewStats = ViewStats.builder()
+                .app("ewm")
+                .uri("/events/1")
+                .hits(10l)
+                .build();
+        List<ViewStats> statsList = List.of(viewStats);
+
+        Mockito.when(server.getStats(eq(start), eq(end), eq(uris), eq(false))).thenReturn(statsList);
+
+        mvc.perform(get("/stats")
+                        .param("start", "2023-01-01 00:00:00")
+                        .param("end", "2023-12-31 23:59:59")
+                        .param("uris", uris)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].uri").value("/events/1"))
+                .andExpect(jsonPath("$[0].hits").value(10));
     }
 }

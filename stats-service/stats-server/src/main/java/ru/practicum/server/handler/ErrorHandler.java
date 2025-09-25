@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
+import ru.practicum.server.exception.LinksNotFoundException;
 import ru.practicum.server.exception.ValidationException;
 
 import java.util.Collections;
@@ -23,5 +24,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleErrorGettingAnIpAddress(final ErrorGettingAnIpAddress e) {
         return Collections.singletonMap("IP не найден", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleLinksNotFoundException(final LinksNotFoundException e) {
+        return Collections.singletonMap("Не найдены параметры запроса", e.getMessage());
     }
 }
