@@ -1,8 +1,8 @@
 package ru.practicum.server.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 import ru.practicum.server.model.EndpointHit;
 
 /**

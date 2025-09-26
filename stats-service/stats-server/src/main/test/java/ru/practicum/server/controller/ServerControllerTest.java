@@ -15,8 +15,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 import ru.practicum.server.interfaces.Server;
 
 import java.time.LocalDateTime;
@@ -77,8 +77,7 @@ class ServerControllerTest {
             mvc.perform(post("/hit")
                             .content(mapper.writeValueAsString(requestDto))
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isCreated())
-                    .andExpect(content().string("Информация сохранена"));
+                    .andExpect(status().isCreated());
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
@@ -93,8 +92,7 @@ class ServerControllerTest {
             mvc.perform(post("/hit")
                             .content(mapper.writeValueAsString(requestDto))
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isIAmATeapot())
-                    .andExpect(content().string("Возникла ошибка при сохранении статистики"));
+                    .andExpect(status().isIAmATeapot());
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }

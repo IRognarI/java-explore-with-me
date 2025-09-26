@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
 import ru.practicum.server.exception.ValidationException;
 import ru.practicum.server.interfaces.Server;
@@ -60,7 +60,7 @@ public class ServerImpl implements Server {
 
         EndpointHit endpointHit = repository.save(Mapper.toEntityFromRequestDto(requestDto));
 
-        LOG.info("Метод \"addHit\" вернул значение: {}", endpointHit.getId() != null);
+        LOG.info("Метод \"addHit\" вернул значение: {}\nВ базу сохранился объект {}", endpointHit.getId() != null, endpointHit);
 
         return endpointHit.getId() != null;
     }
@@ -78,19 +78,10 @@ public class ServerImpl implements Server {
         LOG.info("Получили параметры запроса:\nНачало: {}\nКонец: {}\nСсылки: {}\nФлаг уникальности IP: {}",
                 start, end, Arrays.toString(uris), unique);
 
-        List<ViewStats> viewStatsList;
+        List<ViewStats> viewStatsList = repository.getStats(start, end, uris, unique);
 
-        if (uris.length > 0) {
-            viewStatsList = repository.getStatsWithUris(start, end, uris, unique);
-            LOG.info("Метод \"getStats\" содержит: {} объектов", viewStatsList.size());
+        LOG.info("Метод \"getStats\" вернул: {} объектов", viewStatsList.size());
 
-            return viewStatsList;
-
-        } else {
-            viewStatsList = repository.getStatsWithOutUris(start, end, unique);
-            LOG.info("Метод \"getStats\" содержит: {} объектов", viewStatsList.size());
-
-            return viewStatsList;
-        }
+        return viewStatsList;
     }
 }

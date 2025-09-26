@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import ru.practicum.client.configuration.ClientConfig;
 import ru.practicum.client.exception.LinksNotFoundException;
 import ru.practicum.client.exception.ValidationException;
-import ru.practicum.server.dto.requestDto.RequestDto;
+import ru.practicum.dto.requestDto.RequestDto;
 
 import java.time.LocalDateTime;
 

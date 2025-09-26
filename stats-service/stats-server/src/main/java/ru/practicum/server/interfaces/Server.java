@@ -1,8 +1,8 @@
 package ru.practicum.server.interfaces;
 
 import jakarta.servlet.http.HttpServletRequest;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 
 import java.time.LocalDateTime;
 import java.util.List;

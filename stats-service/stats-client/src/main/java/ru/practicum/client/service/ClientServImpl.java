@@ -14,8 +14,8 @@ import ru.practicum.client.configuration.ClientConfig;
 import ru.practicum.client.exception.LinksNotFoundException;
 import ru.practicum.client.exception.ValidationException;
 import ru.practicum.client.interfaces.ClientService;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;

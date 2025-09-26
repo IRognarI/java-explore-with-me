@@ -8,8 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.responceDto.ViewStats;
+import ru.practicum.dto.requestDto.RequestDto;
+import ru.practicum.dto.responseDto.ViewStats;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
 import ru.practicum.server.exception.ValidationException;
 import ru.practicum.server.model.EndpointHit;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -120,7 +121,7 @@ public class ServerImplTest {
     public void getStats_List_Is_Not_Empty() {
         String[] uris = {"stats/1", "stats/2", "stats/3"};
 
-        when(repository.getStatsWithUris(
+        when(repository.getStats(
                 any(LocalDateTime.class),
                 any(LocalDateTime.class),
                 any(),
@@ -203,7 +204,7 @@ public class ServerImplTest {
                 .uri("/events/1")
                 .hits(6L)
                 .build());
-        when(repository.getStatsWithUris(any(), any(), any(), anyBoolean())).thenReturn(expectedStats);
+        when(repository.getStats(any(), any(), any(), anyBoolean())).thenReturn(expectedStats);
 
         List<ViewStats> result = server.getStats(start, end, uris, unique);
 

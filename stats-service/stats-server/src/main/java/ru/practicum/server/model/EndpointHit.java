@@ -6,18 +6,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * Класс-сущность, представляющий обращение к эндпоинту.
@@ -41,13 +39,13 @@ import java.util.Objects;
  * @see jakarta.persistence.Id
  * @see jakarta.persistence.GeneratedValue
  * @see jakarta.persistence.Column
- * @see jakarta.validation.constraints.FutureOrPresent
  */
 
 @Getter
 @Setter
 @Entity
 @ToString
+@EqualsAndHashCode(of = {"app", "uri"})
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -68,23 +66,6 @@ public class EndpointHit {
     @Column(name = "ip", nullable = false, length = 60)
     private String ip;
 
-    @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    @FutureOrPresent(message = "Дата не может быть в прошлом")
+    @Column(name = "timestamp_db", nullable = false, columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private LocalDateTime timestamp;
-
-    @Override
-    public final boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null) return false;
-        Class<?> oEffectiveClass = object instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass() : object.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        EndpointHit that = (EndpointHit) object;
-        return getId() != null && Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy proxy ? proxy.getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
 }
