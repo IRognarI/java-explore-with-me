@@ -2,9 +2,11 @@ package ru.practicum.server.dto.requestDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = {"app", "uri"})
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestDto {
 
     @NotNull(message = "Сервис не может быть пустым")

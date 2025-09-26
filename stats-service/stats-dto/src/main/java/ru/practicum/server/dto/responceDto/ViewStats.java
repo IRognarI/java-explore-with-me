@@ -1,4 +1,4 @@
-package ru.practicum.server.dto.requestDto;
+package ru.practicum.server.dto.responceDto;
 
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

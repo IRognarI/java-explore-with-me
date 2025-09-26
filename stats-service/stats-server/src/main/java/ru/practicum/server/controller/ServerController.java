@@ -2,7 +2,6 @@ package ru.practicum.server.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.requestDto.ViewStats;
+import ru.practicum.server.dto.responceDto.ViewStats;
 import ru.practicum.server.interfaces.Server;
 
 import java.time.LocalDateTime;
@@ -45,17 +44,13 @@ public class ServerController {
             @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
             LocalDateTime end,
 
-            @RequestParam(name = "uris")
-            @Size(min = 1, message = "Укажите хотя бы 1 ссылку для получения статистики")
+            @RequestParam(name = "uris", required = false)
+            //@Size(min = 1, message = "Укажите хотя бы 1 ссылку для получения статистики")
             String[] uris,
 
-            @RequestParam(name = "unique", defaultValue = "false")
+            @RequestParam(name = "unique", defaultValue = "false", required = false)
             Boolean unique) {
 
-        List<ViewStats> statsList = server.getStats(start, end, uris, unique);
-
-        return !statsList.isEmpty() ?
-                ResponseEntity.ok(statsList) :
-                ResponseEntity.status(HttpStatus.NO_CONTENT).body(statsList);
+        return ResponseEntity.ok(server.getStats(start, end, uris, unique));
     }
 }

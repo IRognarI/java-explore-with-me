@@ -7,9 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.requestDto.ViewStats;
+import ru.practicum.server.dto.responceDto.ViewStats;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
-import ru.practicum.server.exception.LinksNotFoundException;
 import ru.practicum.server.exception.ValidationException;
 import ru.practicum.server.interfaces.Server;
 import ru.practicum.server.mapper.Mapper;
@@ -61,30 +60,37 @@ public class ServerImpl implements Server {
 
         EndpointHit endpointHit = repository.save(Mapper.toEntityFromRequestDto(requestDto));
 
+        LOG.info("Метод \"addHit\" вернул значение: {}", endpointHit.getId() != null);
+
         return endpointHit.getId() != null;
     }
 
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
         String error;
+
         if (start.isAfter(end)) {
             error = "start = " + start + ", должно быть раньше end = " + end;
             LOG.error(error);
             throw new ValidationException(error);
         }
 
-        List<String> links;
-        if (uris.length == 0) {
-            error = "Укажите ссылки для получения статистики";
-            throw new LinksNotFoundException(error);
-
-        } else {
-            links = Arrays.asList(uris);
-        }
-
         LOG.info("Получили параметры запроса:\nНачало: {}\nКонец: {}\nСсылки: {}\nФлаг уникальности IP: {}",
                 start, end, Arrays.toString(uris), unique);
 
-        return repository.getStatsWithHist(start, end, links, unique);
+        List<ViewStats> viewStatsList;
+
+        if (uris.length > 0) {
+            viewStatsList = repository.getStatsWithUris(start, end, uris, unique);
+            LOG.info("Метод \"getStats\" содержит: {} объектов", viewStatsList.size());
+
+            return viewStatsList;
+
+        } else {
+            viewStatsList = repository.getStatsWithOutUris(start, end, unique);
+            LOG.info("Метод \"getStats\" содержит: {} объектов", viewStatsList.size());
+
+            return viewStatsList;
+        }
     }
 }

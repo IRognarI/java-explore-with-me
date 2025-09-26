@@ -16,7 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.requestDto.ViewStats;
+import ru.practicum.server.dto.responceDto.ViewStats;
 import ru.practicum.server.interfaces.Server;
 
 import java.time.LocalDateTime;
@@ -139,7 +139,7 @@ class ServerControllerTest {
     }
 
     @Test
-    void getStats_shouldReturnNoContent_whenStatsListIsEmpty() throws Exception {
+    void getStats_shouldReturnIsOk_whenStatsListIsEmpty() throws Exception {
         LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0, 0);
         LocalDateTime end = LocalDateTime.of(2023, 12, 31, 23, 59, 59);
         String[] uris = {"/events/1"};
@@ -155,7 +155,7 @@ class ServerControllerTest {
                         .param("uris", uris)
                         .param("unique", "false")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 
     @Test

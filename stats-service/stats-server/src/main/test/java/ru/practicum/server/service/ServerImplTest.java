@@ -9,9 +9,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.server.dto.requestDto.RequestDto;
-import ru.practicum.server.dto.requestDto.ViewStats;
+import ru.practicum.server.dto.responceDto.ViewStats;
 import ru.practicum.server.exception.ErrorGettingAnIpAddress;
-import ru.practicum.server.exception.LinksNotFoundException;
 import ru.practicum.server.exception.ValidationException;
 import ru.practicum.server.model.EndpointHit;
 import ru.practicum.server.repository.JpaEndpointHit;
@@ -26,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
@@ -122,10 +120,10 @@ public class ServerImplTest {
     public void getStats_List_Is_Not_Empty() {
         String[] uris = {"stats/1", "stats/2", "stats/3"};
 
-        when(repository.getStatsWithHist(
+        when(repository.getStatsWithUris(
                 any(LocalDateTime.class),
                 any(LocalDateTime.class),
-                anyList(),
+                any(),
                 anyBoolean()))
                 .thenReturn(viewStatsList);
 
@@ -194,20 +192,6 @@ public class ServerImplTest {
     }
 
     @Test
-    void getStats_WhenUrisIsEmpty_ThrowsLinksNotFoundException() {
-        LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2023, 12, 31, 0, 0);
-        String[] uris = {};
-        Boolean unique = false;
-
-        LinksNotFoundException exception = assertThrows(LinksNotFoundException.class, () -> {
-            server.getStats(start, end, uris, unique);
-        });
-
-        assertEquals("Укажите ссылки для получения статистики", exception.getMessage());
-    }
-
-    @Test
     void getStats_WhenValidParameters_ReturnsViewStatsList() {
         LocalDateTime start = LocalDateTime.of(2023, 1, 1, 0, 0);
         LocalDateTime end = LocalDateTime.of(2023, 12, 31, 0, 0);
@@ -219,7 +203,7 @@ public class ServerImplTest {
                 .uri("/events/1")
                 .hits(6L)
                 .build());
-        when(repository.getStatsWithHist(any(), any(), anyList(), anyBoolean())).thenReturn(expectedStats);
+        when(repository.getStatsWithUris(any(), any(), any(), anyBoolean())).thenReturn(expectedStats);
 
         List<ViewStats> result = server.getStats(start, end, uris, unique);
 
