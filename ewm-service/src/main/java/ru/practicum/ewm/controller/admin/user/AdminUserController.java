@@ -1,4 +1,4 @@
-package ru.practicum.ewm.controller.admin;
+package ru.practicum.ewm.controller.admin.user;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.dto.userDto.UserDto;
 import ru.practicum.dto.userDto.UserRequestDto;
-import ru.practicum.ewm.interfaces.UserService;
+import ru.practicum.ewm.interfaces.user.UserService;
 import ru.practicum.ewm.mapper.Mapper;
 
 import java.util.List;
@@ -24,13 +24,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
-public class AdminController {
-    private static final Logger LOG = LoggerFactory.getLogger(AdminController.class);
-    private static final String userPath = "/users";
+public class AdminUserController {
+    private static final Logger LOG = LoggerFactory.getLogger(AdminUserController.class);
+    private static final String USER_PATH = "/users";
 
     private final UserService userService;
 
-    @PostMapping(userPath)
+    @PostMapping(USER_PATH)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto addUser(@Valid @RequestBody UserRequestDto requestDto) {
         LOG.info("Получен POST запрос в endPoint \"/admin/users\" для создания пользователя. Email: {}, Name: {}",
@@ -39,7 +39,7 @@ public class AdminController {
         return Mapper.toUserDto(userService.addUser(requestDto));
     }
 
-    @GetMapping(userPath)
+    @GetMapping(USER_PATH)
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers(
             @RequestParam(name = "ids") Long[] ids,
@@ -59,7 +59,7 @@ public class AdminController {
                 .toList();
     }
 
-    @DeleteMapping(userPath + "/{id}")
+    @DeleteMapping(USER_PATH + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void userRemove(@PathVariable(name = "id") Long id) {
         LOG.info("Получен DELETE запрос в endPoint \"/admin/users/" + id + "\". Для удаления пользователя с id: " + id);

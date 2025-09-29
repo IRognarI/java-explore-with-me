@@ -12,18 +12,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.dto.userDto.UserDto;
 import ru.practicum.dto.userDto.UserRequestDto;
-import ru.practicum.ewm.controller.admin.AdminController;
-import ru.practicum.ewm.interfaces.UserService;
+import ru.practicum.ewm.controller.admin.user.AdminUserController;
+import ru.practicum.ewm.interfaces.user.UserService;
 import ru.practicum.ewm.model.user.User;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminControllerTestMock {
+public class AdminUserControllerTestMock {
 
     @Mock
     private UserService userService;
 
     @InjectMocks
-    AdminController adminController;
+    AdminUserController adminUserController;
 
     private UserRequestDto requestDto;
     private UserRequestDto requestDto_2;
@@ -59,7 +59,7 @@ public class AdminControllerTestMock {
 
     @Test
     public void addUser_Correct() {
-        UserDto userDto = adminController.addUser(requestDto);
+        UserDto userDto = adminUserController.addUser(requestDto);
 
         Assertions.assertEquals(userDefault.getId(), userDto.getId());
         Assertions.assertEquals(userDefault.getEmail(), userDto.getEmail());

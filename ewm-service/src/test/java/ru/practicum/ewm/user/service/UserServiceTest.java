@@ -8,10 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.userDto.UserRequestDto;
-import ru.practicum.ewm.exception.UserDuplicatedException;
-import ru.practicum.ewm.exception.UserNotFoundException;
+import ru.practicum.ewm.exception.ObjectDuplicatedException;
+import ru.practicum.ewm.exception.ObjectNotFoundException;
 import ru.practicum.ewm.model.user.User;
-import ru.practicum.ewm.service.UserServiceImpl;
+import ru.practicum.ewm.service.user.UserServiceImpl;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class UserServiceTest {
     public void addUser_ShouldThrowWhenUserExistsWithEmail() {
         userService.addUser(userRequestDto_3);
 
-        Assertions.assertThrows(UserDuplicatedException.class, () -> userService.addUser(userRequestDto_4));
+        Assertions.assertThrows(ObjectDuplicatedException.class, () -> userService.addUser(userRequestDto_4));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class UserServiceTest {
     @Test
     public void deleteUserById_WhenUserNotPresent() {
 
-        Assertions.assertThrows(UserNotFoundException.class,
+        Assertions.assertThrows(ObjectNotFoundException.class,
                 () -> userService.userRemove(2343L));
     }
 }

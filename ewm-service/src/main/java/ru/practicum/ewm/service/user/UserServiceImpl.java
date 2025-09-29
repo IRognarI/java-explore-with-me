@@ -1,4 +1,4 @@
-package ru.practicum.ewm.service;
+package ru.practicum.ewm.service.user;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.userDto.UserRequestDto;
 import ru.practicum.ewm.exception.ArrayLinksIsEmptyException;
-import ru.practicum.ewm.exception.UserDuplicatedException;
-import ru.practicum.ewm.exception.UserNotFoundException;
+import ru.practicum.ewm.exception.ObjectDuplicatedException;
+import ru.practicum.ewm.exception.ObjectNotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
-import ru.practicum.ewm.interfaces.UserService;
+import ru.practicum.ewm.interfaces.user.UserService;
 import ru.practicum.ewm.model.user.User;
-import ru.practicum.ewm.repository.JpaUserRepository;
+import ru.practicum.ewm.repository.user.JpaUserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.getUserByEmail(requestDto.getEmail().trim().toLowerCase()));
 
         if (userExists.isPresent()) {
-            throw new UserDuplicatedException("Пользователь с email=" + requestDto.getEmail() + " - существует");
+            throw new ObjectDuplicatedException("Пользователь с email=" + requestDto.getEmail() + " - существует");
         }
 
         if (requestDto.getName().isBlank()) {
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> targetUser = Optional.ofNullable(userRepository.getUserById(userId));
 
         if (targetUser.isEmpty()) {
-            throw new UserNotFoundException("Пользователь с ID { " + userId + " } - не найден");
+            throw new ObjectNotFoundException("Пользователь с ID { " + userId + " } - не найден");
         }
 
         LOG.info("Пользователь с id { " + userId + " } - успешно удален");
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> targetUser = Optional.ofNullable(userRepository.getUserById(userId));
 
         if (targetUser.isEmpty()) {
-            throw new UserNotFoundException("Пользователь с ID { " + userId + " } - не найден");
+            throw new ObjectNotFoundException("Пользователь с ID { " + userId + " } - не найден");
         }
         return targetUser.get();
     }

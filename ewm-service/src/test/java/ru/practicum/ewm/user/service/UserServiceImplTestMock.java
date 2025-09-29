@@ -11,8 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.dto.userDto.UserRequestDto;
 import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.model.user.User;
-import ru.practicum.ewm.repository.JpaUserRepository;
-import ru.practicum.ewm.service.UserServiceImpl;
+import ru.practicum.ewm.repository.user.JpaUserRepository;
+import ru.practicum.ewm.service.user.UserServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

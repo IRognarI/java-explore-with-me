@@ -10,8 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.dto.userDto.UserRequestDto;
-import ru.practicum.ewm.controller.admin.AdminController;
-import ru.practicum.ewm.interfaces.UserService;
+import ru.practicum.ewm.controller.admin.user.AdminUserController;
+import ru.practicum.ewm.interfaces.user.UserService;
 import ru.practicum.ewm.model.user.User;
 
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminController.class)
-public class AdminControllerMvcTest {
+@WebMvcTest(AdminUserController.class)
+public class AdminUserControllerMvcTest {
 
     @Autowired
     private MockMvc mvc;
