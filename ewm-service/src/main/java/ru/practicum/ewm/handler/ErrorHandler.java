@@ -22,7 +22,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
         return new ErrorResponse("CONFLICT", "Ошибка валидации", e.getMessage(), LocalDateTime.now());
     }
@@ -40,7 +40,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUserDuplicatedException(final ObjectDuplicatedException e) {
         return new ErrorResponse("FORBIDDEN", "Ошибка регистрации", e.getMessage(), LocalDateTime.now());
     }

@@ -2,9 +2,11 @@ package ru.practicum.ewm.model.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.practicum.ewm.model.event.Event;
+
+import java.util.List;
 
 @EqualsAndHashCode(of = {"email"})
 @AllArgsConstructor
@@ -41,6 +46,9 @@ public class User {
     @NotNull(message = "Укажите имя")
     @Column(nullable = false, length = 100)
     private String name;
+
+    @OneToMany(mappedBy = "initiator", targetEntity = Event.class, fetch = FetchType.LAZY)
+    private List<Event> eventList;
 }
 
 
