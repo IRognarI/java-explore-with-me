@@ -80,4 +80,18 @@ public class CategoryServiceImpl implements CategoryService {
 
         return updateCategory;
     }
+
+    @Override
+    @Transactional
+    public void removeCategory(Long catId) {
+        if (catId == null || catId < 1) {
+            throw new ValidationException("ID категории не может быть " + catId);
+        }
+
+        boolean categoryExists = categoryRepository.existsById(catId);
+
+        if (!categoryExists) throw new ObjectNotFoundException("Категория с ID { " + catId + " } - не найдена");
+
+        categoryRepository.deleteById(catId);   
+    }
 }

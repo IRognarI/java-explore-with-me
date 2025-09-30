@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,5 +45,14 @@ public class AdminCategoryController {
                 """, catId, name);
 
         return Mapper.toCategoryDto(categoryService.updateCategory(catId, name));
+    }
+
+    @DeleteMapping(CATEGORY_PATH + "/{catId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeCategory(@PathVariable(name = "catId") Long catId) {
+
+        LOG.info("Получили DELETE запрос в endPoint \"admin/categories/{catId}\" на удаление категории с ID {}", catId);
+
+        categoryService.removeCategory(catId);
     }
 }

@@ -8,4 +8,6 @@ public interface CategoryService {
     Category addCategory(CategoryDto categoryDto);
 
     Category updateCategory(Long catId, String name);
+
+    void removeCategory(Long catId);
 }

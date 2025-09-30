@@ -14,6 +14,8 @@ import ru.practicum.ewm.controller.admin.category.AdminCategoryController;
 import ru.practicum.ewm.interfaces.category.CategoryService;
 import ru.practicum.ewm.model.category.Category;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -83,5 +85,26 @@ public class AdminCategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDto_3)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateCategory_shouldStatusIsOk() throws Exception {
+        Mockito.when(categoryService.updateCategory(Mockito.anyLong(), Mockito.anyString())).thenReturn(category_1);
+
+        mvc.perform(patch("/admin/categories/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString("SomeName")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void removeCategory_Correct() throws Exception {
+        Mockito.doNothing().when(categoryService).removeCategory(Mockito.anyLong());
+
+        mvc.perform(delete("/admin/categories/1"))
+                .andExpect(status().isNoContent());
+
+        Mockito
+                .verify(categoryService, Mockito.times(1)).removeCategory(Mockito.anyLong());
     }
 }

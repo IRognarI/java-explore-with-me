@@ -7,14 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.categoryDto.CategoryDto;
 import ru.practicum.ewm.exception.ObjectDuplicatedException;
+import ru.practicum.ewm.exception.ObjectNotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.service.category.CategoryServiceImpl;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 @Rollback
 public class CategoryServiceImplWithDbTest {
 
@@ -90,5 +93,17 @@ public class CategoryServiceImplWithDbTest {
 
         Assertions.assertThrows(ValidationException.class,
                 () -> categoryService.updateCategory(category.getId(), ""));
+    }
+
+    @Test
+    public void removeCategory_Correct() {
+        Category category = categoryService.addCategory(categoryDto_1);
+
+        Assertions.assertNotNull(category.getId(), "Категория не была создана");
+
+        categoryService.removeCategory(category.getId());
+
+        Assertions.assertThrows(ObjectNotFoundException.class,
+                () -> categoryService.updateCategory(category.getId(), categoryDto_2.getName()));
     }
 }
