@@ -14,6 +14,7 @@ import ru.practicum.ewm.mapper.Mapper;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.repository.category.JpaCategoryRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -92,6 +93,37 @@ public class CategoryServiceImpl implements CategoryService {
 
         if (!categoryExists) throw new ObjectNotFoundException("Категория с ID { " + catId + " } - не найдена");
 
-        categoryRepository.deleteById(catId);   
+        LOG.info("Категория с ID { " + catId + " } - удалена");
+
+        categoryRepository.deleteById(catId);
+    }
+
+    @Override
+    public List<Category> getCategories(Integer from, Integer size) {
+        from = from == null ? 0 : from;
+        size = size == null ? 10 : size;
+
+        List<Category> categoryList = categoryRepository.getCategories(from, size);
+
+        LOG.info("В коллекции категорий, объектов: {}", categoryList.size());
+
+        return categoryList;
+    }
+
+    @Override
+    public Category getCategory(Long catId) {
+        if (catId == null || catId < 1) {
+            throw new ValidationException("ID не может быть " + catId);
+        }
+
+        Optional<Category> targetCategory = Optional.ofNullable(categoryRepository.getCategoryById(catId));
+
+        if (targetCategory.isEmpty()) {
+            throw new ObjectNotFoundException("Категория с ID " + catId + " - не найдена");
+        }
+
+        LOG.info("Вернули категорию: {}", targetCategory.get());
+
+        return targetCategory.get();
     }
 }

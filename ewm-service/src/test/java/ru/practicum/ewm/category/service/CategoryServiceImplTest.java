@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.dto.categoryDto.CategoryDto;
 import ru.practicum.ewm.exception.ObjectNotFoundException;
+import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.repository.category.JpaCategoryRepository;
 import ru.practicum.ewm.service.category.CategoryServiceImpl;
@@ -55,5 +56,20 @@ public class CategoryServiceImplTest {
 
         Assertions.assertThrows(ObjectNotFoundException.class,
                 () -> categoryService.removeCategory(4L));
+    }
+
+    @Test
+    public void getCategory_Correct() {
+        Mockito.when(categoryRepository.getCategoryById(Mockito.anyLong())).thenReturn(category_1);
+
+        Category targetCategory = categoryService.getCategory(4L);
+
+        Assertions.assertNotNull(targetCategory);
+    }
+
+    @Test
+    public void getCategory_ShouldThrowWhenIdNotValidated() {
+        Assertions.assertThrows(ValidationException.class,
+                () -> categoryService.getCategory(-2L));
     }
 }

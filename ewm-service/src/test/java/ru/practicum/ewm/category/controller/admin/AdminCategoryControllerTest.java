@@ -1,4 +1,4 @@
-package ru.practicum.ewm.category.controller;
+package ru.practicum.ewm.category.controller.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

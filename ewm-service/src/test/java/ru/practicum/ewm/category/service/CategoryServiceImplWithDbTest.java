@@ -15,6 +15,8 @@ import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.service.category.CategoryServiceImpl;
 
+import java.util.List;
+
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
@@ -105,5 +107,45 @@ public class CategoryServiceImplWithDbTest {
 
         Assertions.assertThrows(ObjectNotFoundException.class,
                 () -> categoryService.updateCategory(category.getId(), categoryDto_2.getName()));
+    }
+
+    @Test
+    public void getCategories_shouldThreeCategories() {
+        categoryService.addCategory(categoryDto_1);
+        categoryService.addCategory(categoryDto_2);
+        categoryService.addCategory(categoryDto_4);
+
+        List<Category> categoryList = categoryService.getCategories(null, null);
+
+        Assertions.assertEquals(3, categoryList.size());
+    }
+
+    @Test
+    public void getCategories_shouldTwoCategories() {
+        categoryService.addCategory(categoryDto_1);
+        categoryService.addCategory(categoryDto_2);
+        categoryService.addCategory(categoryDto_4);
+
+        List<Category> categoryList = categoryService.getCategories(1, null);
+
+        Assertions.assertEquals(2, categoryList.size());
+    }
+
+    @Test
+    public void getCategories_shouldOneCategories() {
+        categoryService.addCategory(categoryDto_1);
+        categoryService.addCategory(categoryDto_2);
+        categoryService.addCategory(categoryDto_4);
+
+        List<Category> categoryList = categoryService.getCategories(null, 1);
+
+        Assertions.assertEquals(1, categoryList.size());
+    }
+
+    @Test
+    public void getCategory_shouldThrowWhenCategoryNotFound() {
+
+        Assertions.assertThrows(ObjectNotFoundException.class,
+                () -> categoryService.getCategory(125L));
     }
 }
