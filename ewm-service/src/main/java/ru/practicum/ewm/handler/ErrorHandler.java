@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.exception.ArrayLinksIsEmptyException;
+import ru.practicum.ewm.exception.DateTimeCheckException;
 import ru.practicum.ewm.exception.ObjectDuplicatedException;
 import ru.practicum.ewm.exception.ObjectNotFoundException;
 import ru.practicum.ewm.exception.ValidationException;
@@ -18,13 +19,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(final ConstraintViolationException e) {
-        return new ErrorResponse("CONFLICT", "Ошибка валидации", e.getMessage(), LocalDateTime.now());
+        return new ErrorResponse("BAD_REQUEST", "Ошибка валидации", e.getMessage(), LocalDateTime.now());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
-        return new ErrorResponse("CONFLICT", "Ошибка валидации", e.getMessage(), LocalDateTime.now());
+        return new ErrorResponse("BAD_REQUEST", "Ошибка валидации", e.getMessage(), LocalDateTime.now());
     }
 
     @ExceptionHandler
@@ -42,6 +43,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleUserDuplicatedException(final ObjectDuplicatedException e) {
-        return new ErrorResponse("FORBIDDEN", "Ошибка регистрации", e.getMessage(), LocalDateTime.now());
+        return new ErrorResponse("CONFLICT", "Ошибка регистрации", e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDateTimeCheckException(final DateTimeCheckException e) {
+        return new ErrorResponse("CONFLICT", "Дата начала мероприятия не прошла проверку", e.getMessage(), LocalDateTime.now());
     }
 }

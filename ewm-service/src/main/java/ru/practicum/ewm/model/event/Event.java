@@ -52,12 +52,12 @@ public class Event {
     private String annotation;
 
     @NotNull(message = "Описание мероприятия не может быть пустым")
-    @Column(nullable = false, length = 3000)
+    @Column(name = "description_ev", nullable = false, length = 3000)
     private String description;
 
     @NotNull(message = "Укажите дату начала мероприятия")
     @Future(message = "Дата начала мероприятия может быть только в будущем")
-    @Column(nullable = false)
+    @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
 
     @NotNull(message = "Категория мероприятия должна быть обязательно заполнена")
@@ -66,7 +66,7 @@ public class Event {
     private Category category;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "state_ev", nullable = false)
     @NotNull(message = "Укажите статус мероприятия")
     private State state;
 

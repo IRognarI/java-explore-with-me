@@ -103,4 +103,8 @@ public class UserServiceImpl implements UserService {
         }
         return targetUser.get();
     }
+
+    public boolean userExists(Long userId) {
+        return userRepository.existsById(userId);
+    }
 }

@@ -1,4 +1,4 @@
-package ru.practicum.server.formatter;
+package ru.practicum.dto.formatter;
 
 import lombok.experimental.UtilityClass;
 
