@@ -12,12 +12,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.dto.eventDto.location.Location;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Builder(toBuilder = true)
 @ToString
 @AllArgsConstructor
@@ -35,7 +37,7 @@ public class EventDtoRequest {
 
     @NotNull(message = "Описание мероприятия должно быть заполнено")
     @NotBlank(message = "Описание мероприятия заполнено не корректно")
-    //@Size(min = 20, max = 3000, message = "Описание мероприятия должно состоять минимум из 20 символов и максимум из 3000")
+    @Size(min = 2, max = 3000, message = "Описание мероприятия должно состоять минимум из 2 символов и максимум из 3000")
     private String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -60,4 +62,5 @@ public class EventDtoRequest {
     @NotBlank(message = "Не корректное название мероприятия")
     @Size(min = 2, max = 100, message = "Название мероприятия должно состоять минимум из 2 символов и максимум из 100")
     private String title;
+    private String stateAction;
 }

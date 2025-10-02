@@ -24,4 +24,13 @@ public interface JpaEventRepository extends JpaRepository<Event, Long> {
                                   @Param("userId") Long userId);
 
     Event getEventByIdAndInitiator_Id(Long eventId, Long userId);
+
+    @Query(value = """
+            select *
+            from events as ev
+            where ev.event_id = :eventId
+            and ev.initiator_id = :userId
+            and ev.state_ev in('PENDING', 'CANCELED')
+            """, nativeQuery = true)
+    Event findEventForUpdate(@Param("userId") Long userId, @Param("eventId") Long eventId);
 }

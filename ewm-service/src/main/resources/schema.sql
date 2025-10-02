@@ -36,9 +36,9 @@ constraint fk_category_id foreign key (category_id) references categories (categ
 constraint fk_initiator_id foreign key (initiator_id) references users (user_id)
 );
 
---create index if not exists event_date_idx on events (event_date);--
---create index if not exists category_id_idx on events (category_id);--
+create index if not exists event_date_idx on events (event_date);
+create index if not exists category_id_idx on events (category_id);
 create index if not exists state_ev_idx on events (state_ev);
---create index if not exists paid_idx on events (paid);--
---create index if not exists participant_limit_idx on events (participant_limit);--
+create index if not exists paid_idx on events (paid);
+create index if not exists participant_limit_idx on events (participant_limit);
 create index if not exists initiator_id_idx on events (initiator_id);

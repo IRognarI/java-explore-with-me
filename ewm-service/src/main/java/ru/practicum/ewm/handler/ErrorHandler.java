@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.practicum.ewm.exception.ArrayLinksIsEmptyException;
 import ru.practicum.ewm.exception.DateTimeCheckException;
 import ru.practicum.ewm.exception.ObjectDuplicatedException;
@@ -50,5 +51,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDateTimeCheckException(final DateTimeCheckException e) {
         return new ErrorResponse("CONFLICT", "Дата начала мероприятия не прошла проверку", e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
+        return new ErrorResponse("BAD_REQUEST", "Не корректный запрос", e.getMessage(), LocalDateTime.now());
     }
 }

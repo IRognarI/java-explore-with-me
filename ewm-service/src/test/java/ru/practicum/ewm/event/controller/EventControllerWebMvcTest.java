@@ -22,7 +22,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,21 +88,21 @@ public class EventControllerWebMvcTest {
 
     @Test
     public void addEvent_Correct() throws Exception {
-        Mockito.when(eventService.addEvent(Mockito.any(EventDtoRequest.class), Mockito.eq(1L))).thenReturn(event_1);
+        Mockito.when(eventService.addEvent(any(EventDtoRequest.class), eq(1L))).thenReturn(event_1);
 
         mvc.perform(post("/users/1/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(eventDtoRequest_1)))
                 .andExpect(status().isCreated());
 
-        Mockito.verify(eventService, Mockito.times(1)).addEvent(Mockito.any(EventDtoRequest.class), Mockito.eq(1L));
+        Mockito.verify(eventService, Mockito.times(1)).addEvent(any(EventDtoRequest.class), eq(1L));
     }
 
     @Test
     public void getEvents_ShouldStatusIsOk() throws Exception {
         int from = 0;
         int size = 10;
-        Mockito.when(eventService.getEvents(Mockito.eq(from), Mockito.eq(size), Mockito.eq(user_1.getId())))
+        Mockito.when(eventService.getEvents(eq(from), eq(size), eq(user_1.getId())))
                 .thenReturn(eventListDefault);
 
         mvc.perform(get("/users/1/events")
@@ -108,16 +111,27 @@ public class EventControllerWebMvcTest {
                         .param("size", String.valueOf(size)))
                 .andExpect(status().isOk());
 
-        Mockito.verify(eventService, Mockito.times(1)).getEvents(Mockito.eq(from), Mockito.eq(size), Mockito.eq(user_1.getId()));
+        Mockito.verify(eventService, Mockito.times(1)).getEvents(eq(from), eq(size), eq(user_1.getId()));
     }
 
     @Test
     public void getTargetEvent_shouldBeStatusIsOk() throws Exception {
         long userId = user_1.getId();
         long eventId = event_1.getId();
-        Mockito.when(eventService.getTargetEvent(Mockito.eq(userId), Mockito.eq(eventId))).thenReturn(event_1);
+        Mockito.when(eventService.getTargetEvent(eq(userId), eq(eventId))).thenReturn(event_1);
 
         mvc.perform(get("/users/1/events/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateEvent_shouldBeStatusIsOk() throws Exception {
+        Mockito.when(eventService.updateEvent(Mockito.anyLong(), Mockito.anyLong(), any(EventDtoRequest.class)))
+                .thenReturn(event_1);
+
+        mvc.perform(patch("/users/1/events/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(eventDtoRequest_1)))
                 .andExpect(status().isOk());
     }
 }

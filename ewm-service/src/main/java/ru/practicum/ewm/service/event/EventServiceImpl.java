@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.eventDto.eventDtoRequest.EventDtoRequest;
+import ru.practicum.dto.eventDto.location.Location;
 import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.exception.DateTimeCheckException;
 import ru.practicum.ewm.exception.ObjectNotFoundException;
@@ -15,6 +16,7 @@ import ru.practicum.ewm.mapper.Mapper;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.user.User;
+import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.repository.event.JpaEventRepository;
 import ru.practicum.ewm.service.category.CategoryServiceImpl;
 import ru.practicum.ewm.service.user.UserServiceImpl;
@@ -29,14 +31,15 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     private final static Logger LOG = LoggerFactory.getLogger(EventServiceImpl.class);
 
-    private final JpaEventRepository eventRepository;
+    private final JpaEventRepository jpaEventRepository;
     private final UserServiceImpl userService;
     private final CategoryServiceImpl categoryService;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
     public Event addEvent(EventDtoRequest eventDtoRequest, Long userId) {
-        if (userId == null || userId < 1) throw new ValidationException("ID пользователя не может быть " + userId);
+        idValidate(userId);
 
         if (eventDtoRequest == null) throw new ValidationException("Не достаточно данных для создания мероприятия");
 
@@ -56,7 +59,7 @@ public class EventServiceImpl implements EventService {
                 .createdOn(LocalDateTime.now())
                 .build();
 
-        Event eventFromDb = eventRepository.save(newEvent);
+        Event eventFromDb = jpaEventRepository.save(newEvent);
 
         LOG.info("Добавили мероприятие: " + eventFromDb);
 
@@ -68,11 +71,12 @@ public class EventServiceImpl implements EventService {
         from = from == null ? 0 : from;
         size = size == null ? 10 : size;
 
+        idValidate(userId);
         boolean userExists = checkUserExists(userId);
 
         if (!userExists) throw new ObjectNotFoundException("Пользователь с ID { " + userId + " } - не найден");
 
-        List<Event> eventList = eventRepository.getInitiatorEvent(from, size, userId);
+        List<Event> eventList = jpaEventRepository.getInitiatorEvent(from, size, userId);
 
         LOG.info("Вернули коллекцию мероприятий, размером: {}", eventList.size());
 
@@ -81,15 +85,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event getTargetEvent(Long userId, Long eventId) {
-        if (userId == null || userId < 1) throw new ValidationException("ID пользователя не может быть " + userId);
-
-        if (eventId == null || eventId < 1) throw new ValidationException("ID мероприятия не может быть " + eventId);
+        idValidate(userId);
+        idValidate(eventId);
 
         boolean userExists = checkUserExists(userId);
 
         if (!userExists) throw new ObjectNotFoundException("Пользователь с ID { " + userId + " } - не найден");
 
-        Optional<Event> eventExists = Optional.ofNullable(eventRepository.getEventByIdAndInitiator_Id(eventId, userId));
+        Optional<Event> eventExists = Optional.ofNullable(jpaEventRepository.getEventByIdAndInitiator_Id(eventId, userId));
 
         if (eventExists.isEmpty()) throw new ObjectNotFoundException("Мероприятие с ID=" + eventId + ", где" +
                 " организатор пользователь с ID=" + userId + " - не найдено");
@@ -97,6 +100,83 @@ public class EventServiceImpl implements EventService {
         LOG.info("Вернули Event: " + eventExists.get());
 
         return eventExists.get();
+    }
+
+    @Override
+    @Transactional
+    public Event updateEvent(Long userId, Long eventId, EventDtoRequest eventDtoRequest) {
+        idValidate(userId);
+        idValidate(eventId);
+
+        if (eventDtoRequest == null) throw new ValidationException("Не достаточно данных для обновления мероприятия");
+
+        Optional<Event> eventForUpdate = Optional.ofNullable(jpaEventRepository.findEventForUpdate(userId, eventId));
+
+        if (eventForUpdate.isEmpty()) throw new ObjectNotFoundException("Мероприятие с ID=" + eventId + ", где" +
+                " организатор пользователь с ID=" + userId + " - не найдено");
+
+        Category category = categoryService.getCategory(eventDtoRequest.getCategory().longValue());
+
+        LocalDateTime validateEventDate = LocalDateTime.now().plusHours(2);
+        LocalDateTime newEventDate = null;
+        if (eventDtoRequest.getEventDate() != null) {
+
+            if (eventDtoRequest.getEventDate().isBefore(validateEventDate)) {
+                throw new DateTimeCheckException("Начало мероприятия не может быть раньше, чем через два часа от текущего момента");
+
+            } else {
+                newEventDate = eventDtoRequest.getEventDate();
+            }
+        } else {
+            newEventDate = eventForUpdate.get().getEventDate();
+        }
+
+        String newAnnotation = eventDtoRequest.getAnnotation() != null ? eventDtoRequest.getAnnotation() :
+                eventForUpdate.get().getAnnotation();
+
+        String newDescription = eventDtoRequest.getDescription() != null ? eventDtoRequest.getDescription() :
+                eventForUpdate.get().getDescription();
+
+        Location newLocation = eventDtoRequest.getLocation() != null ? eventDtoRequest.getLocation() :
+                new Location(eventForUpdate.get().getLat(), eventForUpdate.get().getLon());
+
+        Boolean newPaid = eventDtoRequest.getPaid() != null ? eventDtoRequest.getPaid() : eventForUpdate.get().getPaid();
+
+        int newParticipantLimit = eventDtoRequest.getParticipantLimit() != null ? eventDtoRequest.getParticipantLimit() :
+                eventForUpdate.get().getParticipantLimit();
+
+        Boolean newRequestModeration = eventDtoRequest.getRequestModeration() != null ? eventDtoRequest.getRequestModeration() :
+                eventForUpdate.get().getRequestModeration();
+
+        String newTitle = eventDtoRequest.getTitle() != null ? eventDtoRequest.getTitle() : eventForUpdate.get().getTitle();
+
+        State newState = eventDtoRequest.getStateAction() != null &&
+                eventDtoRequest.getStateAction().equals("PUBLISH_EVENT") ? State.PENDING : State.CANCELED;
+
+        Event updateEvent = jpaEventRepository.save(eventForUpdate.get().toBuilder()
+                .annotation(newAnnotation)
+                .category(category)
+                .description(newDescription)
+                .eventDate(newEventDate)
+                .lat(newLocation.getLat())
+                .lon(newLocation.getLon())
+                .paid(newPaid)
+                .participantLimit(newParticipantLimit)
+                .requestModeration(newRequestModeration)
+                .state(newState)
+                .title(newTitle)
+                .build());
+
+        LOG.info("Event с ID=" + eventId + " - обновлен: " + updateEvent);
+
+        return updateEvent;
+    }
+
+    @Override
+    public List<Event> searchEventsWithParams(Long[] userIds, String[] states, Long[] categoriesIds,
+                                              LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
+
+        return eventRepository.getEventsWithParams(userIds, states, categoriesIds, rangeStart, rangeEnd, from, size);
     }
 
     private User getUserIfExists(Long userId) {
@@ -123,5 +203,9 @@ public class EventServiceImpl implements EventService {
         } else {
             return categoryExists.get();
         }
+    }
+
+    private void idValidate(Long id) {
+        if (id == null || id < 1) throw new ValidationException("ID не может быть " + id);
     }
 }
