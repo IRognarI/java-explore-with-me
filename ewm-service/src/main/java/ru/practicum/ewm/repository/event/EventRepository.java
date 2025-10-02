@@ -25,7 +25,6 @@ public class EventRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Autowired
     public EventRepository(JdbcTemplate jdbcTemplate) {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }

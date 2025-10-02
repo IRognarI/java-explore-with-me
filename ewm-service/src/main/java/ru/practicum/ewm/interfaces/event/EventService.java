@@ -17,4 +17,6 @@ public interface EventService {
 
     List<Event> searchEventsWithParams(Long[] userIds, String[] states, Long[] categoriesIds, LocalDateTime rangeStart,
                                        LocalDateTime rangeEnd, Integer from, Integer size);
+
+    Event updateEventByAdmin(Long eventId, EventDtoRequest request);
 }

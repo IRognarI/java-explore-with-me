@@ -6,11 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.dto.eventDto.EventDto;
+import ru.practicum.dto.eventDto.eventDtoRequest.EventDtoRequest;
 import ru.practicum.ewm.interfaces.event.EventService;
 import ru.practicum.ewm.mapper.Mapper;
 
@@ -54,5 +58,15 @@ public class AdminEventController {
                 .stream()
                 .map(Mapper::eventToDto)
                 .toList();
+    }
+
+    @PatchMapping("/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
+    public EventDto updateEventByAdmin(@PathVariable(name = "eventId") Long eventId, @RequestBody EventDtoRequest request) {
+
+        LOG.info("Получили PATCH запрос в endPoint \"/admin/events/{eventId}\" для обновления и изменения статуса" +
+                " мероприятия с ID {}\nДанные для обновления {}", eventId, request);
+
+        return Mapper.eventToDto(eventService.updateEventByAdmin(eventId, request));
     }
 }

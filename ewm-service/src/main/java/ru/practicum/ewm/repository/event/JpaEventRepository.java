@@ -33,4 +33,6 @@ public interface JpaEventRepository extends JpaRepository<Event, Long> {
             and ev.state_ev in('PENDING', 'CANCELED')
             """, nativeQuery = true)
     Event findEventForUpdate(@Param("userId") Long userId, @Param("eventId") Long eventId);
+
+    Event getEventById(Long id);
 }

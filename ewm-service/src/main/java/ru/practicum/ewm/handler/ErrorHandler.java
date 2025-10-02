@@ -10,6 +10,7 @@ import ru.practicum.ewm.exception.ArrayLinksIsEmptyException;
 import ru.practicum.ewm.exception.DateTimeCheckException;
 import ru.practicum.ewm.exception.ObjectDuplicatedException;
 import ru.practicum.ewm.exception.ObjectNotFoundException;
+import ru.practicum.ewm.exception.StateValidationException;
 import ru.practicum.ewm.exception.ValidationException;
 
 import java.time.LocalDateTime;
@@ -57,5 +58,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException e) {
         return new ErrorResponse("BAD_REQUEST", "Не корректный запрос", e.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleStateValidationException(final StateValidationException e) {
+        return new ErrorResponse("CONFLICT", "Ошибка установки статуса события", e.getMessage(), LocalDateTime.now());
     }
 }

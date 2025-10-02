@@ -10,6 +10,7 @@ import ru.practicum.dto.eventDto.location.Location;
 import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.exception.DateTimeCheckException;
 import ru.practicum.ewm.exception.ObjectNotFoundException;
+import ru.practicum.ewm.exception.StateValidationException;
 import ru.practicum.ewm.exception.ValidationException;
 import ru.practicum.ewm.interfaces.event.EventService;
 import ru.practicum.ewm.mapper.Mapper;
@@ -176,7 +177,83 @@ public class EventServiceImpl implements EventService {
     public List<Event> searchEventsWithParams(Long[] userIds, String[] states, Long[] categoriesIds,
                                               LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
 
-        return eventRepository.getEventsWithParams(userIds, states, categoriesIds, rangeStart, rangeEnd, from, size);
+        List<Event> eventList = eventRepository.getEventsWithParams(userIds, states, categoriesIds, rangeStart, rangeEnd, from, size);
+
+        LOG.info("Вернули список events размером: " + eventList.size());
+
+        return eventList;
+    }
+
+    @Override
+    @Transactional
+    public Event updateEventByAdmin(Long eventId, EventDtoRequest request) {
+        idValidate(eventId);
+
+        if (request == null) {
+            throw new ValidationException("Не достаточно данных для обновления мероприятия");
+        }
+
+        Optional<Event> targetEvent = Optional.ofNullable(jpaEventRepository.getEventById(eventId));
+
+        if (targetEvent.isEmpty()) {
+            throw new ObjectNotFoundException("Мероприятие с ID " + eventId + " не найдено");
+        }
+
+        String newAnnotation = request.getAnnotation() != null ? request.getAnnotation() : targetEvent.get().getAnnotation();
+        Long categoryId = request.getCategory() != null ? request.getCategory().longValue() : targetEvent.get().getCategory().getId();
+        String newDescription = request.getDescription() != null ? request.getDescription() : targetEvent.get().getDescription();
+
+        LocalDateTime updateEventDate = null;
+
+        LocalDateTime publishedOn = LocalDateTime.now();
+        LocalDateTime minDateTime = publishedOn.plusHours(1);
+
+        if (request.getEventDate() != null) {
+
+            if (request.getEventDate().isBefore(minDateTime)) {
+                throw new DateTimeCheckException("Время начала мероприятия должно быть не ранее чем за час от даты публикации");
+
+            } else {
+                updateEventDate = request.getEventDate();
+            }
+        } else {
+            updateEventDate = targetEvent.get().getEventDate();
+        }
+
+        Location newLocation = request.getLocation() != null ? request.getLocation() :
+                new Location(targetEvent.get().getLat(), targetEvent.get().getLon());
+
+        Boolean newPaid = request.getPaid() != null ? request.getPaid() : targetEvent.get().getPaid();
+        Integer newParticipantLimit = request.getParticipantLimit() != null ? request.getParticipantLimit() :
+                targetEvent.get().getParticipantLimit();
+        Boolean newRequestModeration = request.getRequestModeration() != null ? request.getRequestModeration() :
+                targetEvent.get().getRequestModeration();
+
+        State actualState = targetEvent.get().getState();
+
+        if (actualState.equals(State.PUBLISHED)) {
+            throw new StateValidationException("Нельзя редактировать мероприятие в статусе " + actualState);
+        }
+
+        String newTitle = request.getTitle() != null ? request.getTitle() : targetEvent.get().getTitle();
+
+        Event updateEvent = jpaEventRepository.save(targetEvent.get().toBuilder()
+                .annotation(newAnnotation)
+                .category(categoryService.getCategory(categoryId))
+                .description(newDescription)
+                .eventDate(updateEventDate)
+                .lat(newLocation.getLat())
+                .lon(newLocation.getLon())
+                .paid(newPaid)
+                .participantLimit(newParticipantLimit)
+                .requestModeration(newRequestModeration)
+                .state(actualState)
+                .title(newTitle)
+                .build());
+
+        LOG.info("Admin обновил event: " + updateEvent);
+
+        return updateEvent;
     }
 
     private User getUserIfExists(Long userId) {
