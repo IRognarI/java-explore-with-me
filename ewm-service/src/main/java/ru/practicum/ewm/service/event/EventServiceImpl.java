@@ -17,6 +17,7 @@ import ru.practicum.ewm.mapper.Mapper;
 import ru.practicum.ewm.model.category.Category;
 import ru.practicum.ewm.model.event.Event;
 import ru.practicum.ewm.model.user.User;
+import ru.practicum.ewm.repository.category.JpaCategoryRepository;
 import ru.practicum.ewm.repository.event.EventRepository;
 import ru.practicum.ewm.repository.event.JpaEventRepository;
 import ru.practicum.ewm.service.category.CategoryServiceImpl;
@@ -36,6 +37,8 @@ public class EventServiceImpl implements EventService {
     private final UserServiceImpl userService;
     private final CategoryServiceImpl categoryService;
     private final EventRepository eventRepository;
+
+    private final JpaCategoryRepository jpaCategoryRepository;
 
     @Override
     @Transactional
@@ -189,71 +192,65 @@ public class EventServiceImpl implements EventService {
     public Event updateEventByAdmin(Long eventId, EventDtoRequest request) {
         idValidate(eventId);
 
-        if (request == null) {
-            throw new ValidationException("Не достаточно данных для обновления мероприятия");
+        Event targetEvent = jpaEventRepository.getEventById(eventId);
+        if (targetEvent == null) {
+            throw new ObjectNotFoundException("Event c ID=" + eventId + " не найден");
         }
 
-        Optional<Event> targetEvent = Optional.ofNullable(jpaEventRepository.getEventById(eventId));
+        if (request == null) throw new ValidationException("Не достаточно данных для обновления event");
 
-        if (targetEvent.isEmpty()) {
-            throw new ObjectNotFoundException("Мероприятие с ID " + eventId + " не найдено");
-        }
+        LocalDateTime actualEventDate = request.getEventDate();
+        if (actualEventDate != null) {
 
-        String newAnnotation = request.getAnnotation() != null ? request.getAnnotation() : targetEvent.get().getAnnotation();
-        Long categoryId = request.getCategory() != null ? request.getCategory().longValue() : targetEvent.get().getCategory().getId();
-        String newDescription = request.getDescription() != null ? request.getDescription() : targetEvent.get().getDescription();
-
-        LocalDateTime updateEventDate = null;
-
-        LocalDateTime publishedOn = LocalDateTime.now();
-        LocalDateTime minDateTime = publishedOn.plusHours(1);
-
-        if (request.getEventDate() != null) {
-
-            if (request.getEventDate().isBefore(minDateTime)) {
-                throw new DateTimeCheckException("Время начала мероприятия должно быть не ранее чем за час от даты публикации");
-
-            } else {
-                updateEventDate = request.getEventDate();
+            if (actualEventDate.isBefore(LocalDateTime.now().plusHours(1))) {
+                throw new DateTimeCheckException("Event должен быть не ранее чем за час от даты публикации");
             }
         } else {
-            updateEventDate = targetEvent.get().getEventDate();
+            actualEventDate = targetEvent.getEventDate();
         }
 
-        Location newLocation = request.getLocation() != null ? request.getLocation() :
-                new Location(targetEvent.get().getLat(), targetEvent.get().getLon());
-
-        Boolean newPaid = request.getPaid() != null ? request.getPaid() : targetEvent.get().getPaid();
-        Integer newParticipantLimit = request.getParticipantLimit() != null ? request.getParticipantLimit() :
-                targetEvent.get().getParticipantLimit();
-        Boolean newRequestModeration = request.getRequestModeration() != null ? request.getRequestModeration() :
-                targetEvent.get().getRequestModeration();
-
-        State actualState = targetEvent.get().getState();
+        State actualState = targetEvent.getState();
 
         if (actualState.equals(State.PUBLISHED)) {
-            throw new StateValidationException("Нельзя редактировать мероприятие в статусе " + actualState);
+            throw new StateValidationException("Нельзя редактировать Event в стадии " + State.PUBLISHED);
+        } else {
+            switch (request.getStateAction()) {
+                case "PUBLISH_EVENT":
+                    actualState = State.PUBLISHED;
+                    break;
+
+                case "REJECT_EVENT":
+                    actualState = State.CANCELED;
+                    break;
+
+                default:
+                    throw new StateValidationException("Не корректный запрос на изменение статуса Event");
+            }
         }
 
-        String newTitle = request.getTitle() != null ? request.getTitle() : targetEvent.get().getTitle();
-
-        Event updateEvent = jpaEventRepository.save(targetEvent.get().toBuilder()
-                .annotation(newAnnotation)
-                .category(categoryService.getCategory(categoryId))
-                .description(newDescription)
-                .eventDate(updateEventDate)
-                .lat(newLocation.getLat())
-                .lon(newLocation.getLon())
-                .paid(newPaid)
-                .participantLimit(newParticipantLimit)
-                .requestModeration(newRequestModeration)
+        Event updateEvent = targetEvent.toBuilder()
+                .annotation(request.getAnnotation() != null ? request.getAnnotation() : targetEvent.getAnnotation())
+                .category(request.getCategory() != null ? categoryService.getCategory(request.getCategory().longValue()) :
+                        targetEvent.getCategory())
+                .description(request.getDescription() != null ? request.getDescription() : targetEvent.getDescription())
+                .eventDate(actualEventDate)
+                .publishedOn(actualState.equals(State.PUBLISHED) ? LocalDateTime.now() : null)
+                .lat(request.getLocation() != null ? request.getLocation().getLat() : targetEvent.getLat())
+                .lon(request.getLocation() != null ? request.getLocation().getLon() : targetEvent.getLon())
+                .paid(request.getPaid() != null ? request.getPaid() : targetEvent.getPaid())
+                .participantLimit(request.getParticipantLimit() != null ? request.getParticipantLimit() :
+                        targetEvent.getParticipantLimit())
+                .requestModeration(request.getRequestModeration() != null ? request.getRequestModeration() :
+                        targetEvent.getRequestModeration())
                 .state(actualState)
-                .title(newTitle)
-                .build());
+                .title(request.getTitle() != null ? request.getTitle() : targetEvent.getTitle())
+                .build();
 
-        LOG.info("Admin обновил event: " + updateEvent);
+        Event saveEvent = jpaEventRepository.save(updateEvent);
 
-        return updateEvent;
+        LOG.info("Обновленный Event: " + saveEvent);
+
+        return saveEvent;
     }
 
     private User getUserIfExists(Long userId) {
