@@ -88,7 +88,7 @@ class HitServiceImplWithDbTest {
         LocalDateTime end = LocalDateTime.of(2023, 12, 31, 0, 0);
         List<StatsItemDto> result = hitService.getStats(start, end, null, false);
 
-        // Проверяем результат
+
         assertEquals(2, result.size());
         assertEquals("app1", result.get(0).getApp());
         assertEquals("/uri1", result.get(0).getUri());
@@ -109,13 +109,13 @@ class HitServiceImplWithDbTest {
         Hit hit2 = new Hit();
         hit2.setApp("app1");
         hit2.setUri("/uri1");
-        hit2.setIp("192.168.1.1"); // тот же IP
+        hit2.setIp("192.168.1.1");
         hit2.setTimestamp(LocalDateTime.of(2023, 6, 1, 11, 0, 0));
 
         Hit hit3 = new Hit();
         hit3.setApp("app1");
         hit3.setUri("/uri1");
-        hit3.setIp("192.168.1.2"); // другой IP
+        hit3.setIp("192.168.1.2");
         hit3.setTimestamp(LocalDateTime.of(2023, 6, 1, 12, 0, 0));
 
         hitRepository.save(hit1);
@@ -129,7 +129,7 @@ class HitServiceImplWithDbTest {
         assertEquals(1, result.size());
         assertEquals("app1", result.get(0).getApp());
         assertEquals("/uri1", result.get(0).getUri());
-        assertEquals(2, result.get(0).getHits()); // 2 уникальных IP
+        assertEquals(2, result.get(0).getHits());
     }
 
     @Test

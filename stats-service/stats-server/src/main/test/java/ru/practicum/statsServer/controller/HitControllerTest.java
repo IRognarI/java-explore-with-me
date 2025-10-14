@@ -55,7 +55,7 @@ class HitControllerTest {
     @Test
     void addHit_withInvalidData_shouldReturnBadRequest() throws Exception {
         NewHitDto dto = new NewHitDto();
-        dto.setApp(""); // Пустое значение - нарушает валидацию @NotBlank
+        dto.setApp("");
         dto.setUri("/test");
         dto.setIp("192.168.1.1");
         dto.setTimestamp(LocalDateTime.of(2023, 1, 1, 12, 0, 0));
