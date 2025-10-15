@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.ewmService.category.interfaces.CategoryService;
-import ru.practicum.ewmService.compilation.interfaces.CompilationService;
 import ru.practicum.ewmService.dateTimeFormatter.Formatter;
 import ru.practicum.ewmService.event.dto.EventFullDto;
 import ru.practicum.ewmService.event.dto.EventListRequestAdmin;
@@ -42,12 +40,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping
 public class EventController {
 
-    private final CategoryService categoryService;
     private final EventService eventService;
-    private final CompilationService compilationService;
     private final EventStatService eventStatService;
 
     @GetMapping("/admin/events")
