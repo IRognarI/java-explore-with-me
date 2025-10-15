@@ -26,7 +26,7 @@ import ru.practicum.ewmService.event.dto.UpdateEventRequest;
 import ru.practicum.ewmService.event.enums.EventState;
 import ru.practicum.ewmService.event.enums.SortingMode;
 import ru.practicum.ewmService.event.interfaces.EventService;
-import ru.practicum.ewmService.event.service.EventStatService;
+import ru.practicum.statsClient.StatsClient;
 import ru.practicum.statsDto.StatsItemDto;
 
 import java.time.LocalDateTime;
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 public class EventController {
 
     private final EventService eventService;
-    private final EventStatService eventStatService;
+    private final StatsClient statsClient;
 
     @GetMapping("/admin/events")
     @ResponseStatus(HttpStatus.OK)
@@ -79,14 +79,14 @@ public class EventController {
         String ip = request.getRemoteAddr();
         String uri = request.getRequestURI();
         log.info("Update statistics for ip={} and uri={}", ip, uri);
-        eventStatService.addHit("ewm-main-server", uri, ip, LocalDateTime.now());
+        statsClient.addHit("ewm-main-server", uri, ip, LocalDateTime.now());
     }
 
     private void getStatistics(EventFullDto dto) {
 
         String uri = "/events/" + dto.getId();
         log.info("Get statistics for uri={}", uri);
-        List<StatsItemDto> listDto = eventStatService.getStats(
+        List<StatsItemDto> listDto = statsClient.getStats(
                 LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0),
                 LocalDateTime.of(2035, Month.DECEMBER, 31, 23, 59),
                 List.of(uri),
@@ -103,7 +103,7 @@ public class EventController {
                 e -> e));
         log.info("Get statistics for {} uris", dtoMap.size());
         log.debug("Get statistics for uris: {}", dtoMap.keySet());
-        List<StatsItemDto> listDto = eventStatService.getStats(
+        List<StatsItemDto> listDto = statsClient.getStats(
                 LocalDateTime.of(2000, Month.JANUARY, 1, 0, 0),
                 LocalDateTime.of(2035, Month.DECEMBER, 31, 23, 59),
                 List.copyOf(dtoMap.keySet()),

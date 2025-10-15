@@ -17,8 +17,8 @@ import ru.practicum.ewmService.event.enums.EventState;
 import ru.practicum.ewmService.event.enums.EventStateAction;
 import ru.practicum.ewmService.event.interfaces.EventService;
 import ru.practicum.ewmService.event.location.Location;
-import ru.practicum.ewmService.event.service.EventStatService;
 import ru.practicum.ewmService.user.dto.UserShortDto;
+import ru.practicum.statsClient.StatsClient;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,7 +47,7 @@ class EventControllerTest {
     private EventService eventService;
 
     @MockBean
-    private EventStatService eventStatService;
+    private StatsClient statsClient;
 
     @Test
     void getEventsPublic() throws Exception {
