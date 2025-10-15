@@ -8,6 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
+/**
+ * Объект передачи данных (DTO) для запроса на создание нового пользователя.
+ * Этот класс содержит необходимую информацию для регистрации нового пользователя,
+ * включая электронную почту и имя с соответствующими ограничениями валидации.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

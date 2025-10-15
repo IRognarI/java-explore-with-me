@@ -21,6 +21,11 @@ import ru.practicum.ewmService.category.interfaces.CategoryService;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления подборками событий.
+ * Предоставляет конечные точки для создания, обновления, удаления и получения подборок событий,
+ * как для администраторов, так и для обычных пользователей.
+ */
 @Validated
 @Slf4j
 @RestController

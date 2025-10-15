@@ -9,6 +9,11 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
+/**
+ * Объект передачи данных (DTO) для создания новой подборки.
+ * Этот класс представляет данные, необходимые для создания новой подборки,
+ * включая её заголовок, статус закрепления и связанные события.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -22,6 +22,12 @@ import ru.practicum.ewmService.compilation.interfaces.CompilationService;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления подборками событий.
+ * Предоставляет эндпоинты для создания, обновления, удаления и получения подборок.
+ * Административные эндпоинты позволяют полностью управлять подборками,
+ * а публичные эндпоинты позволяют получать подборки по различным критериям.
+ */
 @Validated
 @Slf4j
 @RestController
@@ -72,6 +78,4 @@ public class CompilationController {
         log.info("Get compilation with id={} public GET request", compId);
         return compilationService.getCompilation(compId);
     }
-
-
 }

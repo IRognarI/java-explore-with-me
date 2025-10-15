@@ -7,6 +7,10 @@ import ru.practicum.ewmService.event.dto.EventShortDto;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object (DTO) для представления подборки событий.
+ * Этот класс включает идентификатор подборки, заголовок, статус закрепления и список связанных событий.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

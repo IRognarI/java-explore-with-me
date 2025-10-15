@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Объект передачи данных, представляющий результат обновления статусов заявок на участие.
+ * Содержит списки подтвержденных и отклоненных заявок на участие.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

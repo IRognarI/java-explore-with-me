@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация сервиса для управления категориями.
+ * Предоставляет методы для добавления, обновления, удаления и получения категорий.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor

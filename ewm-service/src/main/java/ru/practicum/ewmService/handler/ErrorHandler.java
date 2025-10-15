@@ -11,6 +11,11 @@ import ru.practicum.ewmService.exceptions.IntegrityException;
 import ru.practicum.ewmService.exceptions.IsBadRequestException;
 import ru.practicum.ewmService.exceptions.NotFoundException;
 
+/**
+ * Глобальный обработчик исключений для приложения.
+ * Этот класс обрабатывает различные исключения, возникающие в приложении, и возвращает соответствующие HTTP-ответы.
+ * Использует {@link RestControllerAdvice} для глобального применения ко всем контроллерам.
+ */
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {

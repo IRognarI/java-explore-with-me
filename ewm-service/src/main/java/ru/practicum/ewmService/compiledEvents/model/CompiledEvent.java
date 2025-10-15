@@ -14,6 +14,11 @@ import lombok.ToString;
 import ru.practicum.ewmService.compilation.model.Compilation;
 import ru.practicum.ewmService.event.model.Event;
 
+/**
+ * Представляет сущность скомпилированного события, которая связывает подборку с событием.
+ * Эта сущность используется для установления связи многие-к-одному между подборками и событиями,
+ * позволяя группировать события в различные подборки.
+ */
 @Getter
 @Setter
 @ToString

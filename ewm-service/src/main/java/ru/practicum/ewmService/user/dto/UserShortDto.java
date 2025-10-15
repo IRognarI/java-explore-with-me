@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Объект передачи данных (DTO) для представления краткой информации о пользователе.
+ * Содержит только основные поля: id и name.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

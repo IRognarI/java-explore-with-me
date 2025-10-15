@@ -34,6 +34,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/**
+ * Реализация сервиса для управления событиями.
+ * Предоставляет методы для создания, обновления и получения событий,
+ * как для частных пользователей, так и для публичного/административного доступа.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor

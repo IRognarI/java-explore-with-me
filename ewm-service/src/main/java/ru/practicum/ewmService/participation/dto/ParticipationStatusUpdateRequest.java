@@ -7,6 +7,10 @@ import ru.practicum.ewmService.participation.enums.ParticipationStatus;
 
 import java.util.List;
 
+/**
+ * Объект передачи данных для обновления статуса участия.
+ * Содержит список идентификаторов заявок и новый статус для установки.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -28,6 +28,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
+/**
+ * Реализация сервиса для управления подборками событий.
+ * Предоставляет методы для создания, обновления, получения и удаления подборок,
+ * а также для работы с ассоциированными событиями.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor

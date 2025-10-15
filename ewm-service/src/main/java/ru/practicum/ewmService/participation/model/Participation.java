@@ -22,6 +22,11 @@ import ru.practicum.ewmService.user.model.User;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Сущность, представляющая запрос на участие в событии.
+ * Этот класс сопоставляется с таблицей "participation" в базе данных и включает
+ * информацию о событии, запрашивающем пользователе, статусе и времени создания.
+ */
 @Getter
 @Setter
 @ToString

@@ -15,6 +15,10 @@ import ru.practicum.statsServer.repository.JpaHitRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Реализация интерфейса {@link HitService} для управления и получения статистики просмотров.
+ * Предоставляет методы для добавления новых просмотров и получения статистики на основе различных фильтров.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor

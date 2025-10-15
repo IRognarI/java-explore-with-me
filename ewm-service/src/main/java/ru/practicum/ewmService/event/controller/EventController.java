@@ -36,6 +36,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Контроллер для управления событиями.
+ * Предоставляет конечные точки для создания, обновления и получения событий,
+ * как для администраторов, так и для обычных пользователей.
+ */
 @Validated
 @Slf4j
 @RestController

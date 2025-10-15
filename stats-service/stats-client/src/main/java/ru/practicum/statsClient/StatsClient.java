@@ -21,7 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Клиентский класс для взаимодействия со службой статистики.
+ * Предоставляет методы для отправки данных о хитах и получения статистики.
+ */
 @Slf4j
 public class StatsClient {
 

@@ -20,6 +20,10 @@ import ru.practicum.ewmService.user.interfaces.UserService;
 
 import java.util.List;
 
+/**
+ * REST контроллер для управления пользователями.
+ * Предоставляет конечные точки для добавления, получения и удаления пользователей с правами администратора.
+ */
 @Validated
 @Slf4j
 @RestController

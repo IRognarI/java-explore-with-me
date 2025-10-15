@@ -21,6 +21,11 @@ import ru.practicum.statsServer.interfaces.HitService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Контроллер для обработки запросов статистики посещений.
+ * Предоставляет эндпоинты для добавления хитов и получения статистики.
+ */
+
 @Validated
 @Slf4j
 @RestController

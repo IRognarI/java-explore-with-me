@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Представляет географическое местоположение с координатами широты и долготы.
+ * Этот класс используется как встраиваемая сущность в JPA для хранения данных о местоположении.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

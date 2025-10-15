@@ -17,6 +17,13 @@ import ru.practicum.ewmService.user.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Реализация интерфейса {@link UserService}.
+ * Предоставляет методы для управления пользователями, включая добавление, получение и удаление пользователей.
+ * Использует {@link UserRepository} для доступа к данным пользователей,
+ * {@link EventRepository} для проверки событий, связанных с пользователем,
+ * и {@link ParticipationRepository} для проверки участий, связанных с пользователем.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor

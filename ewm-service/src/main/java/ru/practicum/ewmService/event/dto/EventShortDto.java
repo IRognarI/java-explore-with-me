@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewmService.category.dto.CategoryDto;
 import ru.practicum.ewmService.user.dto.UserShortDto;
 
+/**
+ * Объект передачи данных (DTO) для представления краткой версии события.
+ * Этот класс включает основную информацию о событии, такую как его ID, аннотация,
+ * категория, количество подтвержденных запросов, дата события, инициатор, статус оплаты, заголовок и количество просмотров.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

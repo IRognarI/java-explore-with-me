@@ -10,6 +10,22 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
+/**
+ * Объект передачи данных (DTO) для фиксации и передачи статистики просмотров.
+ * Этот класс представляет собой одну запись просмотра с информацией о приложении,
+ * URI, IP-адресе и времени просмотра.
+ *
+ * <p>Ограничения:
+ * <ul>
+ *   <li>app: не должен быть null или пустым, длина от 1 до 64 символов</li>
+ *   <li>uri: не должен быть null или пустым, длина от 1 до 64 символов</li>
+ *   <li>ip: не должен быть null или пустым, длина от 1 до 64 символов</li>
+ *   <li>timestamp: не должен быть null, формат "yyyy-MM-dd HH:mm:ss"</li>
+ * </ul>
+ *
+ * @author Ваше Имя
+ * @since 1.0
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

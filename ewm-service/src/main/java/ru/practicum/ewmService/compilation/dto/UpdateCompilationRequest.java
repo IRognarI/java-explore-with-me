@@ -7,6 +7,10 @@ import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
+/**
+ * DTO для обновления подборки.
+ * Содержит поля для заголовка, статуса закрепления и списка идентификаторов событий.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

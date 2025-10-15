@@ -23,6 +23,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Реализация интерфейса {@link ParticipationService}.
+ * Предоставляет методы для управления запросами на участие в событиях.
+ * Включает создание, отмену и обновление статуса запросов на участие,
+ * а также получение запросов для пользователей или инициаторов событий.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor
