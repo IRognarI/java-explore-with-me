@@ -35,5 +35,6 @@ public class EventFullDto {
     private boolean requestModeration = true;
     private String state;
     private String title;
+    private double rating;
     private long views = 0L;
 }

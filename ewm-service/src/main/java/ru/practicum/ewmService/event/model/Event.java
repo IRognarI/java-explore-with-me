@@ -102,6 +102,8 @@ public class Event {
 
     private String title;
 
+    private double rating;
+
 
     @Override
     public boolean equals(Object o) {

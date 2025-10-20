@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewmService.comment.repository.CommentsRepository;
 import ru.practicum.ewmService.event.repository.EventRepository;
 import ru.practicum.ewmService.exceptions.IntegrityException;
 import ru.practicum.ewmService.exceptions.NotFoundException;
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final ParticipationRepository participationRepository;
+    private final CommentsRepository commentsRepository;
 
     @Override
     public UserDto addUser(NewUserRequest dto) {
@@ -73,7 +75,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (eventRepository.existsByInitiatorId(userId) ||
-                participationRepository.existsByRequesterId(userId)) {
+                participationRepository.existsByRequesterId(userId) ||
+                commentsRepository.existsByCommenterId(userId)) {
             throw new NotFoundException("User with id=%d is unavailable to deletion ".formatted(userId));
         }
 

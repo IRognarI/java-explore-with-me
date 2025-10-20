@@ -317,6 +317,7 @@ public class EventServiceImpl implements EventService {
             switch (request.sortingMode()) {
                 case EVENT_DATE -> sort = Sort.by(Sort.Direction.ASC, "eventDate");
                 case VIEWS -> sort = Sort.by(Sort.Direction.DESC, "views");
+                case RATINGS -> sort = Sort.by(Sort.Direction.DESC, "rating");
             }
         }
 

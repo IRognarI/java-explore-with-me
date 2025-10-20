@@ -143,7 +143,7 @@ class EventControllerTest {
         location.setLat(55.7558f);
         location.setLon(37.6173f);
 
-        LocalDateTime eventDateTime = LocalDateTime.of(2025, 10, 17, 13, 49, 17);
+        LocalDateTime eventDateTime = LocalDateTime.now().plusHours(3).withNano(0);
 
         NewEventDto newEventDto = new NewEventDto();
         newEventDto.setTitle("New Event Title With Minimum Length");
