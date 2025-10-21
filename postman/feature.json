@@ -2918,7 +2918,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": ""
+			"value": "http://localhost:8080"
 		},
 		{
 			"key": "name",
@@ -2926,11 +2926,11 @@
 		},
 		{
 			"key": "userCount",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "catid",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "request_body",
@@ -2946,7 +2946,7 @@
 		},
 		{
 			"key": "uid",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "catname",
@@ -2954,11 +2954,11 @@
 		},
 		{
 			"key": "eid",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "compid",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "toCheck",
@@ -2974,7 +2974,7 @@
 		},
 		{
 			"key": "reqid",
-			"value": ""
+			"value": "1"
 		},
 		{
 			"key": "confirmedRequests",
