@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import ru.practicum.ewmService.comment.repository.CommentsRepository;
 import ru.practicum.ewmService.event.repository.EventRepository;
 import ru.practicum.ewmService.exceptions.IntegrityException;
 import ru.practicum.ewmService.exceptions.NotFoundException;
@@ -43,6 +44,9 @@ public class UserServiceImplTest {
 
     @Mock
     private ParticipationRepository participationRepository;
+
+    @Mock
+    private CommentsRepository commentsRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
